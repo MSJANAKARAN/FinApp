@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Modal } from "bootstrap";
 import { createExpense, deleteSelected, getCustomExpenses, getExpenses, getMonthlyExpenses, getYearlyExpenses, updateExpense } from "../api/expense";
 import ConfirmModal from "../components/confirm-modal";
@@ -93,6 +92,16 @@ function Expenses() {
         modal.show();
     };
 
+    function isValidDateString(dateValue) {
+        if (!dateValue || !dateValue.toString().trim()) {
+            return false;
+        }
+
+        const parsedDate = new Date(dateValue);
+
+        return !Number.isNaN(parsedDate.getTime());
+    }
+
     const handleEditChange = e => {
         setSelectedExpense({
             ...selectedExpense,
@@ -100,8 +109,14 @@ function Expenses() {
         });
     };
 
-
     const updateExpenseData = async () => {
+
+        const requiredFields = ["category", "description", "amount", "paymentType"];
+        const emptyField = requiredFields.find(field => !selectedExpense[field]?.toString().trim());
+
+        if (emptyField || !isValidDateString(selectedExpense?.expenseDate)) {
+            return showToast("Expense Management", "Expense field cannot be empty/invalid.", "info");
+        }
 
         await updateExpense(selectedExpense.expenseId, selectedExpense).then(
             data => {
@@ -120,7 +135,7 @@ function Expenses() {
         loadExpenses();
     };
 
-        
+
     const openDeleteModal = (selectedExpenses) => {
         setSelectedExpense({ ...selectedExpenses });
 
@@ -437,7 +452,7 @@ function Expenses() {
 
     const monthName = new Date(currentYear, currentMonth - 1).toLocaleString("default", { month: "long" });
 
-    const downloadExpenseCSV = function (event) {
+    const downloadExpenseReport = function (event) {
         const type = event.target.value;
         getExpenses(type).then((response) => {
             // 2. This block runs ONLY after the server successfully responds
@@ -691,7 +706,7 @@ function Expenses() {
                                                 onClick={() => openEditModal(expense)}>
                                                 Edit
                                             </button>
-                                          
+
                                         </td>
                                     </tr>
                                 ))
@@ -759,7 +774,7 @@ function Expenses() {
                 <button
                     className="btn btn-link p-0 text-decoration-underline text-primary"
                     value="csv"
-                    onClick={downloadExpenseCSV}
+                    onClick={downloadExpenseReport}
                 >
                     CSV
                 </button>
@@ -767,7 +782,7 @@ function Expenses() {
                 <button
                     className="btn btn-link p-0 text-decoration-underline text-primary"
                     value="pdf"
-                    onClick={downloadExpenseCSV}
+                    onClick={downloadExpenseReport}
                 >
                     PDF
                 </button>
@@ -775,7 +790,7 @@ function Expenses() {
                 <button
                     className="btn btn-link p-0 text-decoration-underline text-primary"
                     value="xlsx"
-                    onClick={downloadExpenseCSV}
+                    onClick={downloadExpenseReport}
                 >
                     Excel
                 </button>
@@ -852,7 +867,6 @@ function Expenses() {
                                     value={selectedExpense.amount}
                                     onChange={handleEditChange}
                                 />
-
                             </div>
 
                             <div className="mb-3">
@@ -876,7 +890,6 @@ function Expenses() {
                             <div className="mb-3">
 
                                 <label>Expense Date</label>
-
                                 <input
                                     type="date"
                                     className="form-control"
@@ -884,29 +897,21 @@ function Expenses() {
                                     value={selectedExpense.expenseDate}
                                     onChange={handleEditChange}
                                 />
-
                             </div>
 
                         </div>
 
                         <div className="modal-footer">
-
                             <button
                                 className="btn btn-secondary"
                                 data-bs-dismiss="modal">
-
                                 Cancel
-
                             </button>
-
                             <button
                                 className="btn btn-primary"
                                 onClick={updateExpenseData}>
-
                                 Update
-
                             </button>
-
                         </div>
 
                     </div>

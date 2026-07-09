@@ -7,13 +7,14 @@ function ExpenseForm({
 
 }) {
 
-    const [expense,setExpense]= useState({
-            category: "",
-            description: "",
-            amount: "",
-            expenseDate: "",
-            paymentType: ""
-        });
+    const [expense, setExpense] = useState({
+        expenseId: "",
+        category: "",
+        description: "",
+        amount: "",
+        expenseDate: "",
+        paymentType: ""
+    });
 
     const handleChange =
         e => {
@@ -35,7 +36,7 @@ function ExpenseForm({
             onSave(expense);
 
             setExpense({
-
+                expenseId: "",
                 category: "",
                 description: "",
                 amount: "",
@@ -189,9 +190,7 @@ function ExpenseForm({
                     <button
                         className=
                         "btn btn-success w-25 mb-3">
-
                         Add
-
                     </button>
 
                 </div>

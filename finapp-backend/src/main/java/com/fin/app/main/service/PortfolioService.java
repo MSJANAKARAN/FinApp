@@ -6,6 +6,7 @@ import com.fin.app.main.dto.common.ApiResponseDto;
 import com.fin.app.main.dto.portfolio.HoldingDto;
 import com.fin.app.main.dto.portfolio.PortfolioTransactionRequestDto;
 import com.fin.app.main.dto.portfolio.PortfolioTransactionResponseDto;
+import com.fin.app.main.entity.Expense;
 import com.fin.app.main.entity.PortfolioTransaction;
 
 public interface PortfolioService {
@@ -25,7 +26,6 @@ public interface PortfolioService {
                         String email,
                         List<Long> ids);
 
-        List<HoldingDto> getHoldings(
-                        String email);
+        List<HoldingDto> getHoldings(String email);
 
 }

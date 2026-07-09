@@ -1,9 +1,10 @@
 import PortFolioForm from "../components/portfolio-form";
 import { useEffect, useState } from "react";
-import { addTransaction, updateTransaction, deleteSelected, getPortfolioTransactions } from "../api/portfolio";
+import { addTransaction, updateTransaction, deleteSelected, getPortfolioTransactions, getPortfolioHoldings , getPortfolioDetails} from "../api/portfolio";
 import Navbar from "../components/navbar";
 import { useToast } from "../components/toast-context";
 import { Modal } from "bootstrap";
+import ConfirmModal from "../components/confirm-modal";
 
 function Portfolio() {
 
@@ -24,17 +25,16 @@ function Portfolio() {
     const currentPortfolios = filteredPortfolios.slice(firstIndex, lastIndex);
     const totalPages = Math.max(1, Math.ceil(filteredPortfolios.length / recordsPerPage));
 
+    const { showToast } = useToast();
+
     const addPortfolio = portfolio => {
         addTransaction(portfolio);
         loadPortfolio();
     };
-    const updateTransaction = async portfolio => {
-        await addTransaction(portfolio);
-        loadPortfolio();
-    };
+
     const loadPortfolio = async () => {
         let response = await getPortfolioTransactions();
-
+        getPortfolioHoldings();
         setSearch("");
         setAssetFilter("");
         setTransactionFilter("");
@@ -42,7 +42,6 @@ function Portfolio() {
         setFilteredPortfolios(response.data);
         setSelectedPortfolio([]);
         setCurrentPage(1);
-
     };
 
     useEffect(() => {
@@ -60,6 +59,14 @@ function Portfolio() {
     };
 
     const updatePortfolioData = async () => {
+        const requiredFields = ["transactionId", "symbol", "companyName", "assetType",
+            "transactionType", "quantity", "price"];
+
+        const emptyField = requiredFields.find(field => !selectedPortfolio[field]?.toString().trim());
+
+        if (emptyField || !isValidDateString(selectedPortfolio?.transactionDate)) {
+            return showToast("Portfolio Management", "Portfolio field cannot be empty/invalid.", "info");
+        }
 
         await updateTransaction(selectedPortfolio.transactionId, selectedPortfolio).then(
             data => {
@@ -77,6 +84,16 @@ function Portfolio() {
 
         loadPortfolio();
     };
+
+    function isValidDateString(dateValue) {
+        if (!dateValue || !dateValue.toString().trim()) {
+            return false;
+        }
+
+        const parsedDate = new Date(dateValue);
+
+        return !Number.isNaN(parsedDate.getTime());
+    }
 
     const handleEditChange = e => {
         setSelectedPortfolio({
@@ -249,6 +266,31 @@ function Portfolio() {
             : <i className="bi bi-sort-alpha-up ms-1"></i>;
     };
 
+
+    const downloadPortfolioReport = function (event) {
+        const type = event.target.value;
+        getPortfolioDetails(type).then((response) => {
+            // 2. This block runs ONLY after the server successfully responds
+            const blob = new Blob([response.data], {
+                type: `application/${type}`
+            });
+
+            const url = window.URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            const date = new Date().toLocaleDateString();
+            link.download = `portfolio_report_${date}.${type}`;
+
+            document.body.appendChild(link);
+            link.click();
+
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }).catch((error) => {
+            console.error("Download failed:", error);
+        });
+    }
     return (
 
 
@@ -276,7 +318,7 @@ function Portfolio() {
                         <option value="">All Assets</option>
                         <option value="Stock">Stock</option>
                         <option value="Bond">Bond</option>
-                        <option value="MutualFund">Mutual Fund</option>
+                        <option value="Mutual Fund">Mutual Fund</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
@@ -308,17 +350,17 @@ function Portfolio() {
 
                     <tr>
                         <th>
-                                <input className="form-check-input"
-                                    type="checkbox"
-                                    checked={
-                                        currentPortfolios.length > 0 &&
-                                        currentPortfolios.every(portfolio =>
-                                            selectedPortfolios.includes(portfolio.transactionId)
-                                        )
-                                    }
-                                    onChange={toggleSelectAll}
-                                />
-                            </th>
+                            <input className="form-check-input"
+                                type="checkbox"
+                                checked={
+                                    currentPortfolios.length > 0 &&
+                                    currentPortfolios.every(portfolio =>
+                                        selectedPortfolios.includes(portfolio.transactionId)
+                                    )
+                                }
+                                onChange={toggleSelectAll}
+                            />
+                        </th>
                         <th style={{ cursor: "pointer" }} onClick={() => sortPortfolio("symbol")}>
                             Symbol {getSortIcon("symbol")}
                         </th>
@@ -406,6 +448,151 @@ function Portfolio() {
                 </tbody>
 
             </table>
+            <div className="d-flex my-3 align-items-center gap-3">
+                <label>Download All Time Portfolio Report:</label>
+
+                <button
+                    className="btn btn-link p-0 text-decoration-underline text-primary"
+                    value="csv"
+                    onClick={downloadPortfolioReport}
+                >
+                    CSV
+                </button>
+
+                <button
+                    className="btn btn-link p-0 text-decoration-underline text-primary"
+                    value="pdf"
+                    onClick={downloadPortfolioReport}
+                >
+                    PDF
+                </button>
+
+                <button
+                    className="btn btn-link p-0 text-decoration-underline text-primary"
+                    value="xlsx"
+                    onClick={downloadPortfolioReport}
+                >
+                    Excel
+                </button>
+            </div>
+
+            <ConfirmModal id="openDeleteModal" header="Confirm Delete" detail="Kindly confirm before deleting selected items." action={deleteSelectedData} />
+            <div
+                className="modal fade"
+                id="editPortfolioModal"
+                tabIndex="-1">
+
+                <div className="modal-dialog">
+
+                    <div className="modal-content">
+
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                Edit Portfolio
+                            </h5>
+                            <button
+                                className="btn-close"
+                                data-bs-dismiss="modal">
+                            </button>
+                        </div>
+
+                        <div className="modal-body">
+                            <div className="mb-3">
+                                <label>Transaction Date</label>
+                                <input
+                                    type="date"
+                                    name="transactionDate"
+                                    className="form-control"
+                                    value={selectedPortfolio.transactionDate}
+                                    onChange={handleEditChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label>Symbol</label>
+                                <input
+                                    name="symbol"
+                                    className="form-control"
+                                    value={selectedPortfolio.symbol}
+                                    onInput={(e) => e.target.value = e.target.value.toUpperCase()}
+                                    onChange={handleEditChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label>Company Name</label>
+                                <input
+                                    name="companyName"
+                                    className="form-control"
+                                    value={selectedPortfolio.companyName}
+                                    onChange={handleEditChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label>Asset Type</label>
+                                <select
+                                    name="assetType"
+                                    className="form-control"
+                                    value={selectedPortfolio.assetType}
+                                    onChange={handleEditChange}>
+                                    <option value="Stock">Stock</option>
+                                    <option value="Bond">Bond</option>
+                                    <option value="Mutual Fund">Mutual Fund</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div className="mb-3">
+                                <label>Transaction Type</label>
+                                <select
+                                    name="transactionType"
+                                    className="form-control"
+                                    value={selectedPortfolio.transactionType}
+                                    onChange={handleEditChange}>
+                                    <option value="BUY">BUY</option>
+                                    <option value="SELL">SELL</option>
+                                </select>
+                            </div>
+                            <div className="mb-3">
+                                <label>Quantity</label>
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    className="form-control"
+                                    value={selectedPortfolio.quantity}
+                                    onChange={handleEditChange}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label>Price</label>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    className="form-control"
+                                    value={selectedPortfolio.price}
+                                    onChange={handleEditChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="modal-footer">
+                            <button
+                                className="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+
+                            <button
+                                className="btn btn-primary"
+                                onClick={updatePortfolioData}>
+                                Update
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
     )
 }

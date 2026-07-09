@@ -9,3 +9,7 @@ export const updateTransaction = (id, transaction) => api.put(`/portfolio/update
 export const deleteSelected = ids => api.post("/portfolio/delete", ids);
 
 export const getPortfolioHoldings = () => api.get("/portfolio/holdings");
+
+export const getPortfolioDetails = (type) => api.get(`/portfolio/export?type=${type}`, {
+    responseType: "blob"
+});

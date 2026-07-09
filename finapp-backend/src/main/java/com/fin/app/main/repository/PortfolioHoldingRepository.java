@@ -42,9 +42,7 @@ public interface PortfolioHoldingRepository
 
 			WHERE pt.email = :email
 
-			GROUP BY
-			    pt.stock_symbol,
-			    pt.company_name
+			GROUP BY pt.symbol, pt.company_name
 
 			HAVING SUM(
 			    CASE
@@ -54,7 +52,7 @@ public interface PortfolioHoldingRepository
 			    END
 			) > 0
 
-			ORDER BY pt.stock_symbol
+			ORDER BY pt.symbol
 			""", nativeQuery = true)
 	List<PortfolioHoldingProjection> getHoldings(
 			@Param("email") String email);

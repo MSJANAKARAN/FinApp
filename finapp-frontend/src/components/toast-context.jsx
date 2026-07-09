@@ -29,7 +29,7 @@ export const ToastProvider = ({ children }) => {
                 ...prev,
                 show: false
             }));
-        }, 3000);
+        }, 5000);
     };
 
     return (

@@ -1,0 +1,216 @@
+Node.j/ npm
+    # Initialize project
+    npm init
+    npm init -y
+
+    # Install package
+    npm install <package>
+    npm i <package>
+
+    # Install as dev dependency
+    npm i -D <package>
+
+    # Install globally
+    npm i -g <package>
+
+    # Install all dependencies
+    npm install
+
+    # Remove package
+    npm uninstall <package>
+
+    # Update packages
+    npm update
+
+    # Check outdated packages
+    npm outdated
+
+    # List installed packages
+    npm list
+    npm list -g --depth=0
+
+    # Run scripts
+    npm start
+    npm run dev
+    npm test
+    npm run build
+
+    # Execute package without installing globally
+    npx <package>
+
+    # Clear npm cache
+    npm cache clean --force
+
+
+Express.js (Node.js)
+    # Create project
+    mkdir notification-service
+    cd notification-service
+
+    npm init -y
+
+    # Install Express
+    npm i express
+
+    # Install common packages
+    npm i dotenv cors helmet morgan
+
+    # Development auto restart
+    npm i -D nodemon
+
+    # Run application
+    npm run dev
+    node server.js
+
+React (Vite)
+    # Create React project
+    npm create vite@latest
+
+    # Create React project directly
+    npm create vite@latest my-app -- --template react
+
+    # Go to project
+    cd my-app
+
+    # Install dependencies
+    npm install
+
+    # Run development server
+    npm run dev
+
+    # Production build
+    npm run build
+
+    # Preview production build
+    npm run preview
+
+Create React App
+    npx create-react-app my-app
+
+    cd my-app
+
+    npm start
+
+    npm run build
+
+    npm test
+
+React Common Package Installation
+    # React Router
+    npm i react-router-dom
+
+    # Axios
+    npm i axios
+
+    # Bootstrap
+    npm i bootstrap
+
+    # Material UI
+    npm i @mui/material @emotion/react @emotion/styled
+
+    # Redux Toolkit
+    npm i @reduxjs/toolkit react-redux
+
+    # React Icons
+    npm i react-icons
+
+    # Tailwind CSS
+    npm i tailwindcss @tailwindcss/vite
+
+SpringBoot (Maven)
+    # Run application
+    mvn spring-boot:run
+
+    # Clean project
+    mvn clean
+
+    # Compile
+    mvn compile
+
+    # Test
+    mvn test
+
+    # Package JAR
+    mvn package
+
+    # Install to local repository
+    mvn install
+
+    # Skip tests
+    mvn clean install -DskipTests
+
+    # Dependency tree
+    mvn dependency:tree
+
+    # Check dependency updates
+    mvn versions:display-dependency-updates
+
+SpringBoot (Gradle)
+    # Run
+    ./gradlew bootRun
+
+    # Build
+    ./gradlew build
+
+    # Clean
+    ./gradlew clean
+
+    # Test
+    ./gradlew test
+
+GIT Commands
+    git init
+    git clone <url>
+    git status
+    git add .
+    git commit -m "message"
+    git push
+    git pull
+    git fetch
+    git branch
+    git checkout branch-name
+    git switch branch-name
+    git switch -c new-branch
+    git merge branch-name
+    git log --oneline
+
+Useful CLI shortcuts
+    # Current directory
+    pwd
+
+    # List files
+    ls
+
+    # Change directory
+    cd folder
+
+    # Go back
+    cd ..
+
+    # Create folder
+    mkdir folder
+
+    # Remove folder
+    rm -rf folder
+
+    # Remove file
+    rm file.txt
+
+    # Clear terminal
+    clear        # macOS/Linux
+    cls          # Windows
+
+    # Show Node version
+    node -v
+
+    # Show npm version
+    npm -v
+
+    # Show Java version
+    java -version
+
+    # Show Maven version
+    mvn -v
+
+    # Show Git version
+    git --version

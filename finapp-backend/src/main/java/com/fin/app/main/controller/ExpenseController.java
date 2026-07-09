@@ -44,11 +44,6 @@ public class ExpenseController {
 		return expenseService.createExpense(authentication.getName(), dto);
 	}
 
-	// @GetMapping
-	// public List<Expense> getExpenses(Authentication authentication) {
-
-	// return expenseService.getExpenses(authentication.getName());
-	// }
 	@GetMapping
 	public ResponseEntity<byte[]> getExpenses(Authentication authentication, @RequestParam String type) throws Exception {
 

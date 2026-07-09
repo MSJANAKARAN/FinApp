@@ -6,6 +6,7 @@ function PortFolioForm({
 }) {
 
     const [portfolio, setPortfolio] = useState({
+        transactionId: "",
         symbol: "",
         companyName: "",
         assetType: "",
@@ -23,6 +24,7 @@ function PortFolioForm({
         onSave(portfolio);
 
         setPortfolio({
+            transactionId: "",
             symbol: "",
             companyName: "",
             assetType: "",
@@ -90,7 +92,7 @@ function PortFolioForm({
                             Bond
                         </option>
 
-                        <option value="MutualFund">
+                        <option value="Mutual Fund">
                             Mutual Fund
                         </option>
 
@@ -107,7 +109,7 @@ function PortFolioForm({
                         onChange={handleChange}
                         required>
                         <option value="">
-                            Asset Type
+                            Transaction Type
                         </option>
                         <option value="BUY">
                             BUY
