@@ -1,15 +1,11 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { registerToast } from "../framework/services/toast-service";
 
 const ToastContext = createContext();
 
 export const ToastProvider = ({ children }) => {
 
-    const [toast, setToast] = useState({
-        show: false,
-        title: "",
-        message: "",
-        type: "success"
-    });
+    const [toasts, setToasts] = useState([]);
 
     const showToast = (
         title,
@@ -17,58 +13,94 @@ export const ToastProvider = ({ children }) => {
         type = "success"
     ) => {
 
-        setToast({
-            show: true,
+        const id = Date.now() + Math.random();
+
+        const toast = {
+            id,
             title,
             message,
             type
+        };
+
+        setToasts(prev => {
+
+            const updated = [...prev, toast];
+
+            return updated.slice(-3);
         });
 
         setTimeout(() => {
-            setToast(prev => ({
-                ...prev,
-                show: false
-            }));
+
+            // removeToast(id);
+
         }, 5000);
     };
 
+    const removeToast = id => {
+
+        setToasts(prev =>
+            prev.filter(toast => toast.id !== id)
+        );
+    };
+
+    useEffect(() => {
+
+        registerToast(showToast);
+
+    }, []);
+
     return (
+
         <ToastContext.Provider value={{ showToast }}>
 
             {children}
 
             <div
                 className="toast-container position-fixed top-0 end-0 pt-5 pe-3"
-                style={{ zIndex: 3000 }}
+                style={{
+                    zIndex: 3000,
+                    width: "380px",
+                    maxWidth: "95vw"
+                }}
             >
 
-                <div
-                    className={`toast text-bg-${toast.type} ${toast.show ? "show" : "hide"}`}
-                >
-                    <div className="toast-header">
+                {
+                    toasts.map(toast => (
 
-                        <strong className="me-auto">
-                            {toast.title}
-                        </strong>
+                        <div
+                            key={toast.id}
+                            className={`toast show text-bg-${toast.type} mb-2 shadow`}
+                        >
 
-                        <button
-                            type="button"
-                            className="btn-close"
-                            onClick={() =>
-                                setToast(prev => ({
-                                    ...prev,
-                                    show: false
-                                }))
-                            }
-                        />
+                            <div className="toast-header">
 
-                    </div>
+                                <strong className="me-auto">
 
-                    <div className="toast-body">
-                        {toast.message}
-                    </div>
+                                    {toast.title}
 
-                </div>
+                                </strong>
+
+                                <button
+                                    type="button"
+                                    className="btn-close"
+                                    onClick={() => removeToast(toast.id)}
+                                />
+
+                            </div>
+
+                            <div
+                                className="toast-body"
+                                style={{
+                                    whiteSpace: "pre-wrap",
+                                    wordBreak: "break-word",
+                                    overflowWrap: "break-word"
+                                }}>
+                                {toast.message}
+                            </div>
+
+                        </div>
+                    ))
+                }
 
             </div>
 

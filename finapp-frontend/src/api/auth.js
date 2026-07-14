@@ -1,9 +1,8 @@
-import api from "../framework/api/axios-config";
-
+import authApi from "../framework/api/auth-api";
 export const login = (data) => {
-    return api.post("/auth/login", data);
+    return authApi.post("/auth/login", data);
 };
 
 export const register = (data) => {
-    return api.post("/auth/register", data);
+    return authApi.post("/auth/register", data);
 };

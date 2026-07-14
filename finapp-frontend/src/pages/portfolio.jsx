@@ -1,11 +1,11 @@
 import PortFolioForm from "../components/portfolio-form";
 import { useEffect, useState } from "react";
-import { addTransaction, updateTransaction, deleteSelected, getPortfolioTransactions, getPortfolioHoldings , getPortfolioDetails} from "../api/portfolio";
+import { addTransaction, updateTransaction, deleteSelected, getPortfolioTransactions, getPortfolioDetails } from "../api/portfolio";
 import Navbar from "../components/navbar";
 import { useToast } from "../components/toast-context";
 import { Modal } from "bootstrap";
 import ConfirmModal from "../components/confirm-modal";
-
+import PortfolioHolding from "./portfolio-holding";
 function Portfolio() {
 
     const [portfolio, setPortfolio] = useState([]);
@@ -27,14 +27,13 @@ function Portfolio() {
 
     const { showToast } = useToast();
 
-    const addPortfolio = portfolio => {
-        addTransaction(portfolio);
+    const addPortfolio = async portfolio => {
+        await addTransaction(portfolio);
         loadPortfolio();
     };
 
     const loadPortfolio = async () => {
         let response = await getPortfolioTransactions();
-        getPortfolioHoldings();
         setSearch("");
         setAssetFilter("");
         setTransactionFilter("");
@@ -42,6 +41,7 @@ function Portfolio() {
         setFilteredPortfolios(response.data);
         setSelectedPortfolio([]);
         setCurrentPage(1);
+
     };
 
     useEffect(() => {
@@ -169,11 +169,9 @@ function Portfolio() {
         let data = [...portfolio];
 
         if (searchValue.trim() !== "") {
-            data = data.filter(portfolio => {
+            data = data.filter(portfolio =>
                 (portfolio.symbol || "").toLowerCase().includes(searchValue.toLowerCase()) ||
-                    (portfolio.companyName || "").toLowerCase().includes(searchValue.toLowerCase())
-
-            }
+                (portfolio.companyName || "").toLowerCase().includes(searchValue.toLowerCase())
             );
         }
 
@@ -185,7 +183,7 @@ function Portfolio() {
 
         if (transactionType !== "") {
             data = data.filter(portfolio =>
-                portfolio.paymentType === transactionType
+                portfolio.transactionType === transactionType
             );
         }
 
@@ -203,14 +201,14 @@ function Portfolio() {
         const value = e.target.value;
         setAssetFilter(value);
         setCurrentPage(1);
-        applyFilters(search, value, assetFilter);
+        applyFilters(search, value, transactionFilter);
     };
 
     const handleTransactionFilter = e => {
         const value = e.target.value;
         setTransactionFilter(value);
         setCurrentPage(1);
-        applyFilters(search, transactionFilter, value);
+        applyFilters(search, assetFilter, value);
     };
 
     const sortPortfolio = field => {
@@ -224,12 +222,12 @@ function Portfolio() {
         setSortField(field);
         setSortDirection(direction);
 
-        const sorted = [...filteredPortfolios].sort((a, b) => {
+        const sorted = [...currentPortfolios].sort((a, b) => {
 
             let valueA = a[field];
             let valueB = b[field];
 
-            if (field === "price") {
+            if (field === "quantity" || field === "price") {
                 return direction === "asc"
                     ? Number(valueA) - Number(valueB)
                     : Number(valueB) - Number(valueA);
@@ -267,19 +265,107 @@ function Portfolio() {
     };
 
 
+    const previousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const nextPage = () => {
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const goToPage = page => {
+        setCurrentPage(page);
+    };
+
+    const renderPageNumbers = () => {
+
+        const pages = [];
+
+        if (totalPages <= 7) {
+
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+
+        } else {
+
+            if (currentPage <= 4) {
+
+                pages.push(1, 2, 3, 4, 5, "...", totalPages);
+
+            } else if (currentPage >= totalPages - 3) {
+
+                pages.push(
+                    1,
+                    "...",
+                    totalPages - 4,
+                    totalPages - 3,
+                    totalPages - 2,
+                    totalPages - 1,
+                    totalPages
+                );
+
+            } else {
+
+                pages.push(
+                    1,
+                    "...",
+                    currentPage - 1,
+                    currentPage,
+                    currentPage + 1,
+                    "...",
+                    totalPages
+                );
+            }
+        }
+
+        return pages.map((page, index) => {
+
+            if (page === "...") {
+                return (
+                    <li
+                        key={`dots-${index}`}
+                        className="page-item disabled">
+                        <span className="page-link">...</span>
+                    </li>
+                );
+            }
+
+            return (
+                <li
+                    key={page}
+                    className={`page-item ${currentPage === page ? "active" : ""}`}>
+                    <button
+                        className="page-link"
+                        onClick={() => goToPage(page)}>
+                        {page}
+                    </button>
+                </li>
+            );
+        });
+    };
+
     const downloadPortfolioReport = function (event) {
         const type = event.target.value;
         getPortfolioDetails(type).then((response) => {
-            // 2. This block runs ONLY after the server successfully responds
+            const mimeTypes = {
+                pdf: "application/pdf",
+                csv: "text/csv",
+                xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            };
             const blob = new Blob([response.data], {
-                type: `application/${type}`
+                type: mimeTypes[type]
             });
 
             const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
             link.href = url;
-            const date = new Date().toLocaleDateString();
+            const date = new Date().toISOString().split("T")[0];
             link.download = `portfolio_report_${date}.${type}`;
 
             document.body.appendChild(link);
@@ -298,6 +384,7 @@ function Portfolio() {
 
             <Navbar title="Portfolio Management">
             </Navbar>
+            <PortfolioHolding></PortfolioHolding>
             < PortFolioForm portfolio={selectedPortfolio} onSave={addPortfolio} />
 
             <div className="col-md-12 d-flex justify-content-end">
@@ -305,7 +392,7 @@ function Portfolio() {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Search Portfolio..."
+                        placeholder="Search Symbol,Company Name..."
                         value={search}
                         onChange={handleSearch}
                     />
@@ -438,7 +525,7 @@ function Portfolio() {
                                 </tr>
                             ))
                     ) : (<tr>
-                        <td colSpan="7" className="text-center text-muted py-4">
+                        <td colSpan="9" className="text-center text-muted py-4">
                             <i className="bi bi-inbox fs-1"></i>
                             <br />
                             No portfolio found matching your search criteria.
@@ -448,6 +535,52 @@ function Portfolio() {
                 </tbody>
 
             </table>
+
+            <div className="d-flex align-items-center mt-3">
+                <div className="col-md-1 justify-content-start">
+
+                    <select
+                        className="form-select w-auto"
+                        value={recordsPerPage}
+                        onChange={e => {
+                            setRecordsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                        }}>
+
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+
+                    </select>
+
+                </div>
+                <div className="col-md-3">
+                    Showing {filteredPortfolios.length === 0 ? 0 : firstIndex + 1
+                    }–{Math.min(lastIndex, filteredPortfolios.length)} of {filteredPortfolios.length} entries
+                </div>
+
+                <nav className="col-md-8">
+                    <ul className="pagination mb-0 justify-content-end">
+
+                        <li className={`page-item ${currentPage <= 1 ? "disabled" : ""}`}>
+                            <button className="page-link" onClick={previousPage}>
+                                Previous
+                            </button>
+                        </li>
+
+                        {renderPageNumbers()}
+
+                        <li className={`page-item ${currentPage >= totalPages || totalPages === 0 ? "disabled" : ""}`}>
+                            <button className="page-link" onClick={nextPage}>
+                                Next
+                            </button>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+
             <div className="d-flex my-3 align-items-center gap-3">
                 <label>Download All Time Portfolio Report:</label>
 
@@ -475,7 +608,6 @@ function Portfolio() {
                     Excel
                 </button>
             </div>
-
             <ConfirmModal id="openDeleteModal" header="Confirm Delete" detail="Kindly confirm before deleting selected items." action={deleteSelectedData} />
             <div
                 className="modal fade"

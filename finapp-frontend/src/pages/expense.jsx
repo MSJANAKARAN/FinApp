@@ -5,6 +5,7 @@ import ConfirmModal from "../components/confirm-modal";
 import ExpenseForm from "../components/expense-form";
 import Navbar from "../components/navbar";
 import { useToast } from "../components/toast-context";
+
 function Expenses() {
 
     const [expenses, setExpenses] = useState([]);
@@ -455,16 +456,20 @@ function Expenses() {
     const downloadExpenseReport = function (event) {
         const type = event.target.value;
         getExpenses(type).then((response) => {
-            // 2. This block runs ONLY after the server successfully responds
+            const mimeTypes = {
+                pdf: "application/pdf",
+                csv: "text/csv",
+                xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            };
             const blob = new Blob([response.data], {
-                type: `application/${type}`
+                type: mimeTypes[type]
             });
 
             const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
             link.href = url;
-            const date = new Date().toLocaleDateString();
+            const date = new Date().toISOString().split("T")[0];
             link.download = `expense_report_${date}.${type}`;
 
             document.body.appendChild(link);

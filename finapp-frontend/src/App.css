@@ -199,9 +199,13 @@
   color: white;
 }
 
+.header-card-bg{
+  background: linear-gradient(45deg, cadetblue, transparent);
+}
+
 .expense {
   min-height: 100vh;
-  background: linear-gradient(to right, rgb(85, 148, 145), rgb(105, 168, 170));
+  background: linear-gradient(to right, rgb(85, 148, 145), rgb(105, 168, 165));
   /* background-image: url("./assets/background.jpg"); */
   /* background-size: 100px; */
   background-position: center;

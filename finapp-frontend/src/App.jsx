@@ -1,13 +1,22 @@
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import ProtectedRoute from "./components/protected-route";
 import Dashboard from "./pages/dashboard";
-import Login from "./pages/login";
-import Register from "./pages/register";
 import Expense from "./pages/expense";
+import Login from "./pages/login";
 import Portfolio from "./pages/portfolio";
+import Register from "./pages/register";
 
 function AppRoutes() {
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      localStorage.removeItem("token");
+      sessionStorage.clear();
+    }
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -52,9 +61,9 @@ function AppRoutes() {
         />
         <Route path="/portfolio" element={
           <div className="portfolio">
-                <Portfolio />
-              </div>
-          } />
+            <Portfolio />
+          </div>
+        } />
       </Routes>
     </BrowserRouter>
   );

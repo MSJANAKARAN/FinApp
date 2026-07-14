@@ -214,3 +214,49 @@ Useful CLI shortcuts
 
     # Show Git version
     git --version
+
+Node.js Spitwise Service:
+
+mkdir splitwise-service
+cd splitwise-service
+npm init -y
+npm install express sequelize pg pg-hstore dotenv cors helmet morgan winston jsonwebtoken kafkajs joi
+npm install --save-dev nodemon
+
+splitwise-service
+│
+├── src
+│   ├── config
+│   │   ├── database.js
+│   │   └── logger.js
+│   │
+│   ├── controllers
+│   │
+│   ├── services
+│   │
+│   ├── repositories
+│   │
+│   ├── models
+│   │
+│   ├── routes
+│   │
+│   ├── middleware
+│   │   ├── authMiddleware.js
+│   │   ├── errorMiddleware.js
+│   │   └── validationMiddleware.js
+│   │
+│   ├── validations
+│   │
+│   ├── kafka
+│   │
+│   ├── utils
+│   │
+│   ├── constants
+│   │
+│   ├── app.js
+│   └── server.js
+│
+├── .env
+├── .gitignore
+├── package.json
+└── README.md

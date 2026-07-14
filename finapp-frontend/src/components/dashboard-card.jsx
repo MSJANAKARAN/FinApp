@@ -12,8 +12,8 @@ function DashboardCard({
             <div className="card shadow-sm">
 
                 <div className="card-body">
-
-                    <h4>{title}: {value}</h4>
+                    <h2>{title} </h2>
+                    <strong>{value}</strong>
 
                 </div>
 

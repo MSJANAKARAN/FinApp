@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { formatCurrency } from "../framework/utils/formatters";
+import { getExpenseDashboardSummary } from "../api/expense";
+import { getPortfolioDashboardSummary } from "../api/portfolio";
 import DashboardCard from "../components/dashboard-card";
-import { getDashboardSummary } from "../api/expense";
-import { getPortfolioHoldings } from "../api/portfolio";
 import Navbar from "../components/navbar";
+import { formatCurrency } from "../framework/utils/formatters";
 
 function Dashboard() {
 
-    const [summary, setSummary] = useState(null);
-
+    const [expenseSummary, setExpenseSummary] = useState(null);
+    const [portfolioSummary, setPortfolioSummary] = useState(null);
+  
     useEffect(() => {
         loadExpenseDashboard();
         loadPortfolioDashboard();
@@ -16,9 +17,9 @@ function Dashboard() {
 
     const loadExpenseDashboard = async () => {
         try {
-            const response = await getDashboardSummary();
+            const response = await getExpenseDashboardSummary();
 
-            setSummary(
+            setExpenseSummary(
                 response.data
             );
         } catch (error) {
@@ -28,9 +29,9 @@ function Dashboard() {
 
     const loadPortfolioDashboard = async () => {
         try {
-            const response = await getPortfolioHoldings();
+            const response = await getPortfolioDashboardSummary();
 
-            setSummary(
+            setPortfolioSummary(
                 response.data
             );
         } catch (error) {
@@ -38,10 +39,9 @@ function Dashboard() {
         }
     };
 
-    if (!summary) {
-
+    if (!expenseSummary && !portfolioSummary) {
         return <h4>
-            Loading...
+            Loading... Kindly wait for sometime or try again later
         </h4>;
     }
 
@@ -51,142 +51,142 @@ function Dashboard() {
 
             <Navbar title="FinApp Dashboard">
             </Navbar>
-
-            <div className="mt-3">
-                <div className="col-md-12 mb-3">
-                    <div className="card shadow-sm">
-                        <div className="card-body">
-                            <h4>Expense Dashboard</h4>
+            {expenseSummary &&
+                <div className="mt-3">
+                    <div className="col-md-12 mb-3">
+                        <div className="card shadow-sm">
+                            <div className="card-body header-card-bg">
+                                <h4>Expense Dashboard</h4>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="row my-3">
-                    <DashboardCard
-                        title="Total Transactions"
-                        value={
-                            summary.totalTransactions
-                        } />
+                    <div className="row my-3">
+                        <DashboardCard
+                            title="Total Transactions"
+                            value={
+                                expenseSummary.totalTransactions
+                            } />
 
-                    <DashboardCard
-                        title="Total Expense"
-                        value={
-                            formatCurrency(
-                                summary.totalExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Total Expense"
+                            value={
+                                formatCurrency(
+                                    expenseSummary.totalExpense
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Weekly Expense"
-                        value={
-                            formatCurrency(
-                                summary.weeklyExpense
-                            )} />
+                        <DashboardCard
+                            title="Weekly Expense"
+                            value={
+                                formatCurrency(
+                                    expenseSummary.weeklyExpense
+                                )} />
 
-                    <DashboardCard
-                        title="Monthly Expense"
-                        value={
-                            formatCurrency(
-                                summary.monthlyExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Monthly Expense"
+                            value={
+                                formatCurrency(
+                                    expenseSummary.monthlyExpense
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Yearly Expense"
-                        value={
-                            formatCurrency(
-                                summary.yearlyExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Yearly Expense"
+                            value={
+                                formatCurrency(
+                                    expenseSummary.yearlyExpense
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Highest Expense"
-                        value={
-                            formatCurrency(
-                                summary.highestExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Highest Expense"
+                            value={
+                                formatCurrency(
+                                    expenseSummary.highestExpense
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Top Category"
-                        value={
-                            summary.topCategory
-                        } />
+                        <DashboardCard
+                            title="Top Category"
+                            value={
+                                expenseSummary.topCategory
+                            } />
 
-                    <DashboardCard
-                        title="Budget Usage %"
-                        value={
-                            summary.currentMonthBudgetUsage
-                        } />
-                </div>
-                  <div className="col-md-12 mb-3">
-                    <div className="card shadow-sm">
-                        <div className="card-body">
-                            <h4>Holdings Dashboard</h4>
-                        </div>
+                        <DashboardCard
+                            title="Budget Usage %"
+                            value={
+                                expenseSummary.currentMonthBudgetUsage
+                            } />
                     </div>
                 </div>
-                <div className="row my-3">
-                    <DashboardCard
-                        title="Total Transactions"
-                        value={
-                            summary.totalTransactions
-                        } />
+            }
+            {portfolioSummary &&
+                <div className="mt-3">
+                    <div className="col-md-12 mb-3">
+                        <div className="card shadow-sm">
+                            <div className="card-body header-card-bg">
+                                <h4>Holdings Dashboard</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row my-3">
+                        <DashboardCard
+                            title="Total Holdings"
+                            value={
+                                portfolioSummary.totalHoldings
+                            } />
 
-                    <DashboardCard
-                        title="Total Expense"
-                        value={
-                            formatCurrency(
-                                summary.totalExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Total Invested"
+                            value={
+                                formatCurrency(
+                                    portfolioSummary.totalInvested
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Weekly Expense"
-                        value={
-                            formatCurrency(
-                                summary.weeklyExpense
-                            )} />
+                        <DashboardCard
+                            title="Buy Transactions"
+                            value={
+                                portfolioSummary.buyTransactions
+                            } />
 
-                    <DashboardCard
-                        title="Monthly Expense"
-                        value={
-                            formatCurrency(
-                                summary.monthlyExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Sell Transactions"
+                            value={
+                                portfolioSummary.sellTransactions
 
-                    <DashboardCard
-                        title="Yearly Expense"
-                        value={
-                            formatCurrency(
-                                summary.yearlyExpense
-                            )
-                        } />
+                            } />
 
-                    <DashboardCard
-                        title="Highest Expense"
-                        value={
-                            formatCurrency(
-                                summary.highestExpense
-                            )
-                        } />
+                        <DashboardCard
+                            title="Weekly Investment"
+                            value={
+                                formatCurrency(
+                                    portfolioSummary.weeklyInvestment
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Top Category"
-                        value={
-                            summary.topCategory
-                        } />
+                        <DashboardCard
+                            title="Monthly Investment"
+                            value={
+                                formatCurrency(
+                                    portfolioSummary.monthlyInvestment
+                                )
+                            } />
 
-                    <DashboardCard
-                        title="Budget Usage %"
-                        value={
-                            summary.currentMonthBudgetUsage
-                        } />
+                        <DashboardCard
+                            title="Yearly Investment"
+                            value={formatCurrency(
+                                portfolioSummary.yearlyInvestment)
+                            } />
+
+                        <DashboardCard
+                            title="Highest Investment"
+                            value={formatCurrency(
+                                portfolioSummary.highestInvestment)
+                            } />
+                    </div>
                 </div>
-
-
-            </div>
-
+            }
         </div>
     );
 }

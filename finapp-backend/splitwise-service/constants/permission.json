@@ -1,0 +1,30 @@
+[
+    {
+        "code": "GROUP_EDIT",
+        "label": "Edit Group"
+    },
+    {
+        "code": "GROUP_DELETE",
+        "label": "Delete Group"
+    },
+    {
+        "code": "MEMBER_ADD",
+        "label": "Add Members"
+    },
+    {
+        "code": "MEMBER_REMOVE",
+        "label": "Remove Members"
+    },
+    {
+        "code": "EXPENSE_CREATE",
+        "label": "Create Expense"
+    },
+    {
+        "code": "EXPENSE_EDIT",
+        "label": "Edit Expense"
+    },
+    {
+        "code": "EXPENSE_DELETE",
+        "label": "Delete Expense"
+    }
+]

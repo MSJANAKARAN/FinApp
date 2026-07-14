@@ -1,10 +1,7 @@
-import { useState }
-    from "react";
+import { useState } from "react";
 
 function ExpenseForm({
-
     onSave
-
 }) {
 
     const [expense, setExpense] = useState({
