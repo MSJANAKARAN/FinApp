@@ -1,0 +1,204 @@
+FINAPP - AWS EC2 ADMINISTRATION COMMANDS (AWS & EC2 FOCUSED)
+
+================================================== 1. Verify the current
+logged-in user Purpose: Confirms which Linux user is currently logged
+into the EC2 instance.
+
+Command: whoami
+
+================================================== 2. Display current
+working directory Purpose: Shows your current location in the Linux
+filesystem.
+
+Command: pwd
+
+================================================== 3. List files
+Purpose: Displays files and directories in the current folder.
+
+Command: ls
+
+================================================== 4. List detailed
+files Purpose: Shows permissions, owner, size and modification date.
+
+Command: ls -la
+
+================================================== 5. Check Ubuntu
+version Purpose: Verify the operating system version.
+
+Command: lsb_release -a
+
+================================================== 6. Check server
+uptime Purpose: Shows how long the EC2 instance has been running.
+
+Command: uptime
+
+================================================== 7. Check hostname
+Purpose: Displays the server hostname.
+
+Command: hostname
+
+================================================== 8. Check CPU and
+Memory Purpose: Monitor CPU and RAM usage.
+
+Command: top
+
+Alternative: htop
+
+================================================== 9. Check RAM Purpose:
+Displays total and available memory.
+
+Command: free -h
+
+================================================== 10. Check disk usage
+Purpose: Shows disk utilization of mounted volumes.
+
+Command: df -h
+
+================================================== 11. Check folder
+sizes Purpose: Find large directories consuming storage.
+
+Command: du -sh *
+
+================================================== 12. Find private IP
+Purpose: Displays the EC2 private IP.
+
+Command: hostname -I
+
+================================================== 13. Find public IP
+Purpose: Displays the current public IP.
+
+Command: curl ifconfig.me
+
+================================================== 14. Check listening
+ports Purpose: Shows services listening on network ports.
+
+Command: sudo ss -tulpn
+
+================================================== 15. Check a specific
+port Purpose: Verify whether an application is running.
+
+Commands: sudo ss -tulpn | grep 8080 sudo ss -tulpn | grep 5555 sudo ss
+-tulpn | grep 5432 sudo ss -tulpn | grep 9092
+
+================================================== 16. View running
+processes Purpose: Displays all active processes.
+
+Command: ps -ef
+
+================================================== 17. Search a process
+Purpose: Locate a specific application.
+
+Commands: ps -ef | grep java ps -ef | grep node ps -ef | grep postgres
+ps -ef | grep kafka
+
+================================================== 18. Stop a process
+Purpose: Terminate a process.
+
+Commands: kill kill -9
+
+================================================== 19. Update Ubuntu
+packages Purpose: Refresh package index.
+
+Command: sudo apt update
+
+================================================== 20. Upgrade packages
+Purpose: Install latest package updates.
+
+Command: sudo apt upgrade -y
+
+================================================== 21. Remove unused
+packages Purpose: Free disk space.
+
+Command: sudo apt autoremove -y
+
+================================================== 22. PostgreSQL
+service
+
+Status: sudo systemctl status postgresql
+
+Start: sudo systemctl start postgresql
+
+Stop: sudo systemctl stop postgresql
+
+Restart: sudo systemctl restart postgresql
+
+================================================== 23. Nginx service
+
+Status: sudo systemctl status nginx
+
+Start: sudo systemctl start nginx
+
+Stop: sudo systemctl stop nginx
+
+Restart: sudo systemctl restart nginx
+
+Reload: sudo systemctl reload nginx
+
+Configuration Test: sudo nginx -t
+
+================================================== 24. Kafka
+
+Start: cd /opt/kafka bin/kafka-server-start.sh config/server.properties
+
+Stop: bin/kafka-server-stop.sh
+
+Topics: bin/kafka-topics.sh –list –bootstrap-server localhost:9092
+
+================================================== 25. Spring Boot
+
+Start: ./gradlew bootRun
+
+Build: ./gradlew build
+
+Run Jar: java -jar app.jar
+
+================================================== 26. React (Vite)
+
+Install packages: npm install
+
+Start: npm run dev
+
+Production build: npm run build
+
+================================================== 27. Git
+
+Status: git status
+
+Pull latest: git pull
+
+Commit history: git log –oneline
+
+================================================== 28. Logs
+
+System: journalctl -xe
+
+Follow Nginx error log: sudo tail -f /var/log/nginx/error.log
+
+================================================== 29. SSH
+
+Connect: ssh -i ~/PROJECTS/FinApp/finapp-key.pem ubuntu@
+
+Exit: exit
+
+================================================== 30. Daily EC2
+Maintenance Checklist
+
+1.  SSH into EC2
+2.  git pull
+3.  java -version
+4.  node -v
+5.  Check disk (df -h)
+6.  Check memory (free -h)
+7.  Ensure PostgreSQL is running
+8.  Ensure Nginx is running
+9.  Start Kafka if required
+10. Start Spring Boot services
+11. Start React (development only)
+12. Verify ports (sudo ss -tulpn)
+13. Check logs if any service fails
+14. Stop the EC2 instance from AWS Console when work is complete.
+
+AWS Console Reminder: - Start Instance -> Instance state -> Start
+instance - Stop Instance -> Instance state -> Stop instance - Do NOT
+Terminate unless you want to permanently delete the server. - Leave
+“Skip OS shutdown” unchecked for graceful shutdown.

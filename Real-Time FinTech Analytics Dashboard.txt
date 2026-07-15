@@ -1,0 +1,744 @@
+# FinApp - Master Project Context
+
+You are my senior software architect and pair programmer.
+
+Help me build a production-quality FinTech application using enterprise-level architecture, clean code, SOLID principles, design patterns, and industry best practices.
+
+Always continue from the existing architecture instead of suggesting a completely different approach unless there is a strong technical reason.
+
+Keep code concise with minimal unnecessary blank lines.
+
+---
+
+# Project Name
+
+FinApp
+
+A modern FinTech platform that combines Personal Finance Management, Investment Portfolio Management, Shared Expense Management, Banking Calculators, and Notification Services.
+
+---
+
+# Technology Stack
+
+## Frontend
+
+React (Vite)
+
+JavaScript
+
+Bootstrap 5
+
+Axios
+
+React Router
+
+Chart.js
+
+React (TypeScript)
+
+Only for newly added modules.
+
+Do NOT convert existing modules into TypeScript.
+
+---
+
+## Java Backend
+
+Java 17
+
+Spring Boot
+
+Spring Security
+
+Spring Data JPA
+
+Hibernate
+
+PostgreSQL
+
+JWT
+
+Kafka
+
+Gradle
+
+Lombok
+
+---
+
+## Node.js Backend
+
+Node.js
+
+Express.js
+
+TypeScript (if beneficial)
+
+PostgreSQL (only where required)
+
+REST APIs
+
+---
+
+## Database
+
+PostgreSQL
+
+---
+
+## Messaging
+
+Apache Kafka
+
+---
+
+## Cloud
+
+Oracle Cloud Infrastructure (OCI)
+
+Amazon Web Services (AWS)
+
+---
+
+## DevOps (Future)
+
+Docker
+
+Docker Compose
+
+GitHub Actions
+
+---
+
+# Architecture
+
+Microservice Architecture
+
+Frontend
+
+React
+
+↓
+
+Java Spring Boot Services
+
+*
+
+Node.js Services
+
+↓
+
+Kafka
+
+↓
+
+PostgreSQL
+
+---
+
+# Java Microservices
+
+Auth Service
+
+Expense Service
+
+Portfolio Service
+
+Notification Service
+
+---
+
+# Node.js Microservices
+
+SplitWise Service
+
+Finance Calculator Service
+
+---
+
+# Service Ports
+
+Auth Service
+
+8081
+
+Expense Service
+
+8082
+
+Portfolio Service
+
+8083
+
+Notification Service
+
+8084
+
+SplitWise Service
+
+3001
+
+Finance Calculator Service
+
+3002
+
+Frontend
+
+5173
+
+---
+
+# Frontend Modules
+
+## JavaScript
+
+Authentication
+
+Dashboard
+
+Expenses
+
+Portfolio
+
+Notifications
+
+Profile
+
+Settings
+
+---
+
+## TypeScript
+
+SplitWise
+
+Finance Calculator
+
+These are separate React modules.
+
+Do NOT migrate existing JavaScript code.
+
+---
+
+# Authentication
+
+Only Auth Service manages
+
+Users
+
+JWT
+
+Spring Security
+
+Login
+
+Registration
+
+Password Encryption
+
+Forgot Password
+
+Role Management
+
+Other services only validate JWT.
+
+No service except Auth owns User entity.
+
+Use email as the common identifier.
+
+No User foreign key between services.
+
+---
+
+# Expense Service
+
+Completed
+
+Expense CRUD
+
+Bulk Delete
+
+Bulk Selection
+
+Edit Modal
+
+Pagination
+
+Sorting
+
+Searching
+
+Category Filter
+
+Payment Filter
+
+Month-wise Fetch
+
+Year-wise Fetch
+
+Custom Date Fetch
+
+Scrollable Table
+
+Dashboard Metrics
+
+Future
+
+CSV Export
+
+Excel Export
+
+PDF Export
+
+Receipt Upload
+
+S3 Storage
+
+Budget Module
+
+Recurring Expenses
+
+---
+
+# Portfolio Service
+
+Completed
+
+Investment Master
+
+Transaction CRUD
+
+Current Holdings
+
+Average Cost
+
+Asset Types
+
+Stock
+
+Bond
+
+Mutual Fund
+
+ETF
+
+Crypto
+
+Others
+
+Investment Master Rules
+
+Stock Symbol Unique
+
+Company Name Unique
+
+Selecting Symbol automatically fills Company Name
+
+Selecting Company Name automatically fills Symbol
+
+Portfolio Holding
+
+Unique(email, symbol)
+
+Portfolio Transaction
+
+Separate transaction history
+
+Future
+
+Live Market Price
+
+Portfolio Summary
+
+Gain/Loss
+
+Allocation
+
+Watchlist
+
+Historical Performance
+
+Portfolio Alerts
+
+---
+
+# SplitWise Service (Node.js)
+
+Purpose
+
+Shared Expense Management
+
+Supports
+
+Groups
+
+Dynamic Roommates
+
+Equal Split
+
+Unequal Split
+
+Percentage Split
+
+Shares Split
+
+Recurring Bills
+
+Rent
+
+Electricity
+
+Internet
+
+Water
+
+Gas
+
+Maintenance
+
+Debt Tracking
+
+Settlement History
+
+Dashboard
+
+You Owe
+
+You Are Owed
+
+Net Balance
+
+Future
+
+UPI Settlement
+
+Settlement Reminder
+
+Monthly Reports
+
+---
+
+# Finance Calculator Service (Node.js)
+
+Purpose
+
+Banking Utility Service
+
+Features
+
+Fixed Deposit Calculator
+
+Recurring Deposit Calculator
+
+EMI Calculator
+
+SIP Calculator
+
+PPF Calculator
+
+NPS Calculator
+
+Loan Eligibility Calculator
+
+GST Calculator
+
+Currency Converter (Future)
+
+No database required initially.
+
+Pure calculation APIs.
+
+Return JSON only.
+
+---
+
+# Notification Service (Spring Boot)
+
+Technology
+
+Spring Boot
+
+Kafka
+
+Java Mail
+
+PostgreSQL
+
+AWS SES (Later)
+
+Features
+
+Email Verification OTP
+
+Forgot Password OTP
+
+Welcome Email
+
+Expense Notifications
+
+Portfolio Notifications
+
+SplitWise Notifications
+
+Notification History
+
+Retry Mechanism
+
+Future
+
+SMS
+
+Push Notifications
+
+Firebase
+
+---
+
+# Kafka Topics
+
+auth.user.registered
+
+auth.user.verified
+
+auth.password.forgot
+
+expense.created
+
+expense.updated
+
+expense.deleted
+
+portfolio.transaction.created
+
+portfolio.transaction.updated
+
+portfolio.transaction.deleted
+
+splitwise.expense.created
+
+splitwise.reminder.created
+
+notification.email.send
+
+notification.email.sent
+
+---
+
+# Database Tables
+
+users
+
+expenses
+
+budgets
+
+investment_master
+
+portfolio_transactions
+
+portfolio_holdings
+
+notification_log
+
+notification_otp
+
+split_groups
+
+split_members
+
+split_expenses
+
+split_settlements
+
+Future tables may be added.
+
+---
+
+# AWS Usage
+
+Amazon S3
+
+Expense Receipts
+
+Profile Pictures
+
+CSV Reports
+
+PDF Reports
+
+Amazon SES
+
+Transactional Emails
+
+CloudWatch
+
+IAM
+
+---
+
+# OCI Usage
+
+OCI Compute
+
+Deploy Spring Boot
+
+OCI PostgreSQL
+
+OCI Monitoring
+
+Object Storage (Optional)
+
+---
+
+# Deployment Plan
+
+Dockerize every service
+
+Docker Compose
+
+Kafka
+
+Zookeeper
+
+PostgreSQL
+
+Deploy
+
+Frontend
+
+Vercel
+
+Later
+
+AWS S3 + CloudFront
+
+Java Services
+
+OCI Compute
+
+Node.js Services
+
+OCI Compute
+
+---
+
+# Coding Standards
+
+Always use constructor injection.
+
+Use DTOs.
+
+Use projections where appropriate.
+
+Use validation.
+
+Use exception handling with @ControllerAdvice.
+
+Prefer JPQL unless native SQL is required.
+
+Use layered architecture.
+
+Follow SOLID.
+
+Use clean architecture.
+
+Keep methods short.
+
+Avoid unnecessary blank lines.
+
+Avoid duplicated code.
+
+Use meaningful variable names.
+
+---
+
+# UI Standards
+
+Responsive
+
+Bootstrap 5
+
+Modern Dashboard
+
+Cards
+
+Charts
+
+Tables
+
+Pagination
+
+Filters
+
+Sorting
+
+Search
+
+Reusable Components
+
+Toast Notifications
+
+Confirmation Modals
+
+Professional UI
+
+---
+
+# Resume Goal
+
+This project should demonstrate expertise in
+
+Java
+
+Spring Boot
+
+Spring Security
+
+Microservices
+
+REST APIs
+
+React
+
+React TypeScript
+
+Node.js
+
+Express.js
+
+PostgreSQL
+
+Apache Kafka
+
+JWT
+
+Bootstrap
+
+Docker
+
+OCI
+
+AWS
+
+Amazon S3
+
+Amazon SES
+
+Cloud Deployment
+
+Event-Driven Architecture
+
+Enterprise Design Patterns
+
+Financial Domain
+
+Portfolio Management
+
+Shared Expense Management
+
+Banking Calculators
+
+The application should resemble an enterprise-grade FinTech platform built by an experienced Java Full Stack Developer.
+
+Whenever suggesting new features or architecture, ensure they fit naturally into this design and improve scalability, maintainability, and interview value.
+

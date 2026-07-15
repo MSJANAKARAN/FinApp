@@ -1,0 +1,107 @@
+Bootstrap 5 Utility Classes Cheat Sheet
+
+Spacing
+
+-   m-0 to m-5: margin on all sides.
+-   mt-, mb-, ms-, me-: top, bottom, start(left), end(right).
+-   mx-*: horizontal margin.
+-   my-*: vertical margin.
+-   p-0 to p-5: padding on all sides.
+-   pt-, pb-, ps-, pe-, px-, py-: directional padding.
+
+Text
+
+-   text-start: left align.
+-   text-center: center.
+-   text-end: right align.
+-   text-primary, text-success, text-danger, text-warning, text-info,
+    text-dark, text-light, text-white.
+-   fw-bold, fw-semibold, fw-normal, fst-italic.
+-   fs-1 to fs-6: font size.
+-   text-decoration-none.
+-   text-uppercase, text-lowercase, text-capitalize.
+
+Display
+
+-   d-none, d-block, d-inline, d-inline-block.
+-   d-flex: enable flexbox.
+-   d-grid: enable CSS Grid.
+
+Flexbox
+
+-   flex-row, flex-column.
+-   justify-content-start, center, end, between, around, evenly.
+-   align-items-start, center, end, stretch.
+-   align-self-start, center, end.
+-   flex-wrap, flex-nowrap.
+-   gap-1 to gap-5.
+
+Width & Height
+
+-   w-25, w-50, w-75, w-100, w-auto.
+-   h-25, h-50, h-75, h-100.
+-   vh-100: full viewport height.
+
+Grid
+
+-   container, container-fluid.
+-   row.
+-   col, col-6, col-md-4, col-lg-3.
+-   g-0 to g-5: gutter spacing.
+
+Forms
+
+-   form-control: text input.
+-   form-label: label styling.
+-   form-select: dropdown.
+-   form-check: checkbox/radio wrapper.
+-   form-check-input.
+-   form-check-label.
+-   input-group: prepend/append text or buttons.
+-   is-valid, is-invalid: validation styles.
+
+Buttons
+
+-   btn.
+-   btn-primary, secondary, success, danger, warning, info, light, dark.
+-   btn-outline-*.
+-   btn-sm, btn-lg.
+-   disabled.
+
+Background & Borders
+
+-   bg-primary, secondary, success, danger, warning, info, light, dark,
+    white.
+-   border, border-0.
+-   border-primary, border-danger, etc.
+-   rounded, rounded-0, rounded-1..5, rounded-circle, rounded-pill.
+-   shadow, shadow-sm, shadow-lg.
+
+Position
+
+-   position-relative, position-absolute.
+-   fixed-top, fixed-bottom.
+-   sticky-top.
+-   top-0, bottom-0, start-0, end-0.
+-   translate-middle.
+
+Overflow & Visibility
+
+-   overflow-auto, overflow-hidden, overflow-scroll.
+-   visible, invisible.
+
+Responsive Prefixes
+
+Use with most utilities: - sm (>=576px) - md (>=768px) - lg (>=992px) -
+xl (>=1200px) - xxl (>=1400px)
+
+Examples: - text-md-center - d-lg-flex - col-md-6 - mt-lg-5
+
+Common Login Form Example
+
+container vh-100 d-flex justify-content-center align-items-center card
+shadow p-4 form-label form-control mb-3 btn btn-primary w-100
+text-center
+
+Opacity
+opacity-0,-25,-50,-75,-100
